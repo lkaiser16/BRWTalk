@@ -6,12 +6,12 @@ import java.util.Date;
 
 public class Message
 {
-    Date date;
-    FirebaseUser user;
+    String date;
+    String user;
     String message;
     long id;
 
-    public Message(FirebaseUser user, String message, Date date, long id)
+    public Message(String user, String message, String date, long id)
     {
         this.date = date;
         this.user = user;
@@ -19,12 +19,12 @@ public class Message
         this.id = id;
     }
 
-    public Date getDate()
+    public String getDate()
     {
         return date;
     }
 
-    public FirebaseUser getUser()
+    public String getUser()
     {
         return user;
     }

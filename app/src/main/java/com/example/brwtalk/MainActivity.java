@@ -31,11 +31,12 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     TextView v;
     Button b;
-    ListView lv;
+    public ListView lv;
     FirebaseUser user;
     String collectionName = "BRWTalk";
     Logic l;
     List<Message> messageList = new ArrayList<>();
+    Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,9 +51,22 @@ public class MainActivity extends AppCompatActivity
         b = findViewById(R.id.buttonSend);
         lv = findViewById(R.id.listView);
         l = new Logic();
-        messageList = l.readFromDatabase(db, collectionName);
-        Adapter adapter = new Adapter(this, android.R.layout.simple_list_item_1, messageList);
+        if (user != null)
+        {
+            messageList = l.readFromDatabase(db, collectionName);
+        }
+        adapter = new Adapter(this, android.R.layout.simple_list_item_1, messageList);
+        try
+        {
+            Thread.sleep(3000);
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
         lv.setAdapter(adapter);
+
+
 //        loginAuthADD("laurenz260805@gmail.com", "laurenz123");
 
     }
@@ -89,7 +103,8 @@ public class MainActivity extends AppCompatActivity
     {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        user = mAuth.getCurrentUser();
+//        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + user.getEmail());
 //        if (currentUser.equals(null))
 //        {
 //
@@ -166,8 +181,13 @@ public class MainActivity extends AppCompatActivity
         if (user != null && !(text.equals("")))
         {
             Date d = new Date();
+            String d1 = d.toString();
             long id = System.currentTimeMillis();
-            l.writeOnDatabase(user, text, d, id, db, collectionName);
+            l.writeOnDatabase(user.getEmail(), text, d1, id, db, collectionName);
+            messageList.clear();
+            messageList = l.readFromDatabase(db, collectionName);
+            lv.setAdapter(adapter);
+
         }
         this.v.setText("");
     }

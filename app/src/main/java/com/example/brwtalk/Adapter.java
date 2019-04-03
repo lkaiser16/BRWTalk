@@ -40,7 +40,7 @@ public class Adapter extends ArrayAdapter
 
             String date = message.getDate().toString();
             String msgText = message.getMessage();
-            String user = message.getUser().getEmail();
+            String user = message.getUser();
             TextView usertextView = convertView.findViewById(R.id.user);
 
             TextView timeTextView = convertView.findViewById(R.id.time);
