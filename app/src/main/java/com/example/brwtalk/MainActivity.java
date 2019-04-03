@@ -19,6 +19,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.w3c.dom.Text;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity
 {
@@ -30,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     FirebaseUser user;
     String collectionName = "BRWTalk";
     Logic l;
+    List<Message> messageList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,6 +50,9 @@ public class MainActivity extends AppCompatActivity
         b = findViewById(R.id.buttonSend);
         lv = findViewById(R.id.listView);
         l = new Logic();
+        messageList = l.readFromDatabase(db, collectionName);
+        Adapter adapter = new Adapter(this, android.R.layout.simple_list_item_1, messageList);
+        lv.setAdapter(adapter);
 //        loginAuthADD("laurenz260805@gmail.com", "laurenz123");
 
     }
@@ -153,9 +162,12 @@ public class MainActivity extends AppCompatActivity
 
 
         }
-        if (user != null)
+
+        if (user != null && !(text.equals("")))
         {
-            l.writeOnDatabase(user, text, db, collectionName);
+            Date d = new Date();
+            long id = System.currentTimeMillis();
+            l.writeOnDatabase(user, text, d, id, db, collectionName);
         }
         this.v.setText("");
     }
